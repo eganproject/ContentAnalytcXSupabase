@@ -60,7 +60,7 @@
         </div>
 
 
-        @if (isset($chartData) && !empty($chartData['labels']))
+        @if (isset($chartDataViews) && !empty($chartDataViews['labels']))
             <!-- Ringkasan Statistik -->
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
 
@@ -93,9 +93,27 @@
 
             <!-- Grafik Utama -->
             <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-slate-200">
-                <h2 class="text-lg font-semibold text-slate-800 mb-4">Tren Statistik Harian</h2>
+                <h2 class="text-lg font-semibold text-slate-800 mb-4">Tren Statistik View Harian</h2>
                 <div class="h-96 w-full">
-                    <canvas id="myChart"></canvas>
+                    <canvas id="myChartView"></canvas>
+                </div>
+            </div>
+            <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-slate-200">
+                <h2 class="text-lg font-semibold text-slate-800 mb-4">Tren Statistik Like Harian</h2>
+                <div class="h-96 w-full">
+                    <canvas id="myChartLike"></canvas>
+                </div>
+            </div>
+            <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-slate-200">
+                <h2 class="text-lg font-semibold text-slate-800 mb-4">Tren Statistik Comment Harian</h2>
+                <div class="h-96 w-full">
+                    <canvas id="myChartComment"></canvas>
+                </div>
+            </div>
+            <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-slate-200">
+                <h2 class="text-lg font-semibold text-slate-800 mb-4">Tren Statistik Share Harian</h2>
+                <div class="h-96 w-full">
+                    <canvas id="myChartShare"></canvas>
                 </div>
             </div>
         @else
@@ -125,15 +143,198 @@
 
     <script>
         // Ambil data dari Blade, pastikan tidak null
-        const chartData = @json($chartData ?? null);
+        const chartDataView = @json($chartDataViews ?? null);
+        const chartDataLike = @json($chartDataLikes ?? null);
+        const chartDataComment = @json($chartDataComments ?? null);
+        const chartDataShare = @json($chartDataShares ?? null);
 
         // Hanya jalankan jika data chart ada
-        if (chartData && chartData.labels && chartData.labels.length > 0) {
-            const ctx = document.getElementById('myChart').getContext('2d');
+        if (chartDataView && chartDataView.labels && chartDataView.labels.length > 0) {
+            const ctxView = document.getElementById('myChartView').getContext('2d');
+            const ctxLike = document.getElementById('myChartLike').getContext('2d');
+            const ctxComment = document.getElementById('myChartComment').getContext('2d');
+            const ctxShare = document.getElementById('myChartShare').getContext('2d');
 
-            new Chart(ctx, {
+            new Chart(ctxView, {
                 type: 'line',
-                data: chartData,
+                data: chartDataView,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#e2e8f0', // Warna grid sumbu Y
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                color: '#64748b' // Warna teks sumbu Y
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false // Sembunyikan grid sumbu X
+                            },
+                            ticks: {
+                                color: '#64748b' // Warna teks sumbu X
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            align: 'start',
+                            labels: {
+                                usePointStyle: true,
+                                boxWidth: 8,
+                                padding: 25,
+                                color: '#334155'
+                            }
+                        },
+                        tooltip: {
+                            enabled: true,
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: '#ffffff',
+                            titleColor: '#1e293b',
+                            bodyColor: '#475569',
+                            borderColor: '#e2e8f0',
+                            borderWidth: 1,
+                            padding: 12,
+                            cornerRadius: 8,
+                            displayColors: true,
+                            boxPadding: 4
+                        }
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                }
+            });
+
+            new Chart(ctxLike, {
+                type: 'line',
+                data: chartDataLike,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#e2e8f0', // Warna grid sumbu Y
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                color: '#64748b' // Warna teks sumbu Y
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false // Sembunyikan grid sumbu X
+                            },
+                            ticks: {
+                                color: '#64748b' // Warna teks sumbu X
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            align: 'start',
+                            labels: {
+                                usePointStyle: true,
+                                boxWidth: 8,
+                                padding: 25,
+                                color: '#334155'
+                            }
+                        },
+                        tooltip: {
+                            enabled: true,
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: '#ffffff',
+                            titleColor: '#1e293b',
+                            bodyColor: '#475569',
+                            borderColor: '#e2e8f0',
+                            borderWidth: 1,
+                            padding: 12,
+                            cornerRadius: 8,
+                            displayColors: true,
+                            boxPadding: 4
+                        }
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                }
+            });
+
+            new Chart(ctxComment, {
+                type: 'line',
+                data: chartDataComment,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#e2e8f0', // Warna grid sumbu Y
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                color: '#64748b' // Warna teks sumbu Y
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false // Sembunyikan grid sumbu X
+                            },
+                            ticks: {
+                                color: '#64748b' // Warna teks sumbu X
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            align: 'start',
+                            labels: {
+                                usePointStyle: true,
+                                boxWidth: 8,
+                                padding: 25,
+                                color: '#334155'
+                            }
+                        },
+                        tooltip: {
+                            enabled: true,
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: '#ffffff',
+                            titleColor: '#1e293b',
+                            bodyColor: '#475569',
+                            borderColor: '#e2e8f0',
+                            borderWidth: 1,
+                            padding: 12,
+                            cornerRadius: 8,
+                            displayColors: true,
+                            boxPadding: 4
+                        }
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                }
+            });
+
+            new Chart(ctxShare, {
+                type: 'line',
+                data: chartDataShare,
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
